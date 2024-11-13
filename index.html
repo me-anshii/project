@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .send-btn {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .clear-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Contact Form</h2>
+    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access key" value="a95cc1d9-7b67-4b9d-88fb-4fe6ee1c5ba7a95cc1d9-7b67-4b9d-88fb-4fe6ee1c5ba7"/>
+        
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="contact">Contact No.</label>
+        <input type="tel" id="contact" name="contact" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+
+        <label for="mediaUpload">Upload Photo/Video</label>
+        <input type="file" id="mediaUpload" name="media" accept="image/*, video/*" required>
+
+        <label for="capture">Capture Photo</label>
+        <input type="file" id="cameraInput" name="media" accept="image/*" capture="environment" style="display: none;">
+        <button type="button" onclick="document.getElementById('cameraInput').click();">Capture Photo</button>
+
+        <label for="location">Get Current Location</label>
+        <button type="button" onclick="getLocation()">Get Location</button>
+        <p id="locationOutput"></p>
+
+        <div class="buttons">
+            <button type="button" class="send-btn" onclick="sendForm()">Send</button>
+            <button type="reset" class="clear-btn">Clear</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Function to get the current location
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            document.getElementById("locationOutput").innerText = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        document.getElementById("locationOutput").innerText = 
+            "Latitude: " + position.coords.latitude + 
+            ", Longitude: " + position.coords.longitude;
+    }
+
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                document.getElementById("locationOutput").innerText = "User denied the request for Geolocation.";
+                break;
+            case error.POSITION_UNAVAILABLE:
+                document.getElementById("locationOutput").innerText = "Location information is unavailable.";
+                break;
+            case error.TIMEOUT:
+                document.getElementById("locationOutput").innerText = "The request to get user location timed out.";
+                break;
+            case error.UNKNOWN_ERROR:
+                document.getElementById("locationOutput").innerText = "An unknown error occurred.";
+                break;
+        }
+    }
+
+    // Function to handle form submission
+    function sendForm() {
+        const name = document.getElementById("name").value;
+        const contact = document.getElementById("contact").value;
+        const description = document.getElementById("description").value;
+        const location = document.getElementById("locationOutput").innerText;
+
+        if (name && contact && description) {
+            alert("Form Submitted!\n\nName: " + name + "\nContact: " + contact + "\nDescription: " + description + "\nLocation: " + location);
+            document.getElementById("contactForm").reset();
+        } else {
+            alert("Please fill out all required fields.");
+        }
+    }
+</script>
+
+</body>
+</html>
